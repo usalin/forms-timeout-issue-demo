@@ -1,24 +1,22 @@
-<div class="mb-3">
-    <label class="mb-1">Entity Type</label>
-    <div class="ng-select-auto-save">
-        <select [formControl]="componentType">
-            <option value="typeOne">typeOne</option>
-            <option value="typeTwo">typeTwo</option>
-        </select>
+<div class="form-group">
+    <label class="form-label">Component Type</label>
+    <div class="form-select">
+      <select class="select-control" [formControl]="componentType">
+        <option value="typeOne">Type One</option>
+        <option value="typeTwo">Type Two</option>
+      </select>
     </div>
-</div>
-
-<!-- ENTITY FORM -->
+  </div>
+  
+<!-- FORM ONE -->
 <div *ngIf="componentType?.value == 'typeOne'">
     <app-form-one [entity]="activeEntityInfo$ | async"></app-form-one>
 </div>
-<!-- INDIVIDUAL FORM -->
+<!-- FORM TWO -->
 <div *ngIf="componentType?.value == 'typeTwo'">
     <app-form-two [entity]="activeEntityInfo$ | async"></app-form-two>            
 </div>
 
-<!-- <div *ngIf="activeForm?.dirty && !hideButton"> -->
 <div class="btn-wrapper" *ngIf="activeForm?.dirty">
     <button class="save-btn" [disabled]="activeForm?.invalid || !(activeForm?.dirty)" (click)="updateEntity()">Save</button>
-
 </div>

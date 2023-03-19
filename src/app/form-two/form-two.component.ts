@@ -1,18 +1,19 @@
-import { Component, Input } from '@angular/core';
+import { ChangeDetectionStrategy, Component, Input } from '@angular/core';
 import { FormGroup, FormControl, Validators } from '@angular/forms';
 import { Entity } from '../entity';
 
 @Component({
   selector: 'app-form-two',
   templateUrl: './form-two.component.html',
-  styleUrls: ['./form-two.component.scss']
+  styleUrls: ['./form-two.component.scss'],
+  changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class FormTwoComponent {
   @Input() set entity(entity: Entity | undefined | null) {
     if (entity != undefined || entity != null) {
      this.form.reset(entity);
      } 
-   //  else this.form.reset();
+    else this.form.reset();
    }
  
    form = new FormGroup({

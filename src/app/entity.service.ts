@@ -18,7 +18,6 @@ export class EntityService {
   updateSuccesful$ = this.updateSuccesful.asObservable();
 
   updateEntity(entity: Entity) {
-    console.log(entity)
     this.activeEntity.next(entity);
     this.updateSuccesful.next(true)
   }

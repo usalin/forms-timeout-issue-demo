@@ -1,6 +1,6 @@
 import { ChangeDetectionStrategy, Component, ViewChild } from '@angular/core';
 import { FormControl, FormGroup } from '@angular/forms';
-import { Observable, Subscription, take } from 'rxjs';
+import { Observable, Subject, takeUntil } from 'rxjs';
 import { Entity } from '../entity';
 import { EntityService } from '../entity.service';
 import { FormOneComponent } from '../form-one/form-one.component';
@@ -19,66 +19,52 @@ export class MainFormComponent {
 
   /* OBSERVABLES */
   activeEntityInfo$: Observable<Entity | undefined> = this.entityService.activeEntity$;
+  private destroy$ = new Subject();
 
   /* FORMCONTROLS */
   componentType = new FormControl();
 
   /* VARIABLES */
   activeForm?: FormGroup | null;
-  hideButton : boolean = false;
-    
-  constructor(private entityService: EntityService) { }
- 
+
+  constructor(private entityService: EntityService) {}
 
   ngOnInit(): void {
-    this.activeEntityInfo$.pipe(
-      take(1)).subscribe(entity => {
-        console.log(entity)
-       this.initialise(entity!);
-    });
+    this.activeEntityInfo$
+      .pipe(takeUntil(this.destroy$))
+      .subscribe((entity) => {
+        this.initialise(entity!);
+      });
+
     this.componentType.valueChanges
-    .subscribe((type) => 
-    {  this.hideButton = true;
-      setTimeout(() => this.setActiveForm(), 5 )})
+      .pipe(takeUntil(this.destroy$))
+      .subscribe((type) => {
+       setTimeout(() => this.setActiveForm(), 5);
+      });
 
     this.entityService.updateSuccesful$
+    .pipe(takeUntil(this.destroy$))
     .subscribe((action: any) => {
       this.activeForm?.reset();
-      console.log('active form dirty?', this.activeForm?.dirty)
-      console.log('active form invalid?', this.activeForm?.invalid)
-      this.activeForm?.markAsUntouched();
-      const result = this.activeForm?.invalid || !(this.activeForm?.touched);
-      console.log(result);
-      // this.hideButton = true;
-    })
+    });
   }
 
   initialise(entity: Entity) {
     this.componentType.setValue(entity?.type);
+    this.setActiveForm();
     setTimeout(() => this.setActiveForm(), 5);
   }
 
   setActiveForm() {
     const activeComponent = this.componentType.value === 'typeOne' ? this.formOneComponent : this.formTwoComponent;
     this.activeForm = activeComponent?.form;
-    // const controls = (this.activeForm?.controls!);
-    // this.enableSaveButtonOnChanges(controls);
   }
 
-  // enableSaveButtonOnChanges(controls: any) {
-  //   Object.keys(controls).forEach(element => {
-  //      this.activeForm?.get(element)?.valueChanges
-  //      .subscribe(() => { 
-  //       this.hideButton = false;
-  //     })
-  //   });
-  // }
-  
   updateEntity() {
-    const activeForm = this.activeForm;
-    const entity =  {insuredType: this.componentType.value, ...activeForm!.value } as Entity;
+    const entity = {
+      type: this.componentType.value,
+      ...this.activeForm!.value,
+    } as Entity;
     this.entityService.updateEntity(entity);
-
   }
-
 }

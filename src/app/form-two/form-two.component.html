@@ -1,34 +1,32 @@
 <form [formGroup]="form">
-    <div>
+    <div class="control-wrapper">
         <label for="name" class="form-label">Description</label>
         <div>
             <input type="text" formControlName="description" id="name" class="form-control">
         </div>
     </div>
 
-    <div>
+    <div class="control-wrapper">
         <label for="name" class="form-label">Title</label>
         <div>
             <input type="text" formControlName="title" id="name" class="form-control">
         </div>
     </div>
 
-    <div>
+    <div class="control-wrapper">
         <label for="name" class="form-label">Feat Two</label>
         <div>
             <input type="text" formControlName="featTwo" id="name" class="form-control">
         </div>
     </div>
    
-    <div>
+    <div class="control-wrapper">
         <label for="name" class="form-label">Fix Two</label>
         <div>
             <input type="text" formControlName="fixTwo" id="name" class="form-control">
         </div>
     </div>
    
-   
-
     <app-subform [form]="commonGroup"></app-subform>
 
 

@@ -1,11 +1,12 @@
-import { Component, Input } from '@angular/core';
+import { ChangeDetectionStrategy, Component, Input } from '@angular/core';
 import { FormGroup, FormControl, Validators } from '@angular/forms';
 import { Entity } from '../entity';
 
 @Component({
   selector: 'app-form-one',
   templateUrl: './form-one.component.html',
-  styleUrls: ['./form-one.component.scss']
+  styleUrls: ['./form-one.component.scss'],
+  changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class FormOneComponent {
   
@@ -13,7 +14,7 @@ export class FormOneComponent {
     if (entity != undefined || entity != null) {
      this.form.reset(entity);
      } 
-   //  else this.form.reset();
+    else this.form.reset();
    }
  
    form = new FormGroup({
